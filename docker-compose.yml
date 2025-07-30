@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Main Go application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: helloworld-app
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      # Exclude vendor and build artifacts
+      - /app/vendor
+      - /app/.git
+      - /app/node_modules
+    environment:
+      - GO_ENV=development
+      - PORT=8080
+    restart: unless-stopped
+
+  # PostgreSQL database (optional for now)
+  postgres:
+    image: postgres:15-alpine
+    container_name: helloworld-postgres
+    environment:
+      POSTGRES_DB: helloworld
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data: 
