@@ -263,6 +263,13 @@ make k8s-logs        # View logs
 - **Direktno pitaj: 'Možeš li precizirati šta tačno želiš?' ili 'Nisam siguran da li sam razumeo, možeš li pojasniti?'**
 - **Cilj: Uvek dati tačan, koncizan i kontekstualno relevantan odgovor.**
 
+### Pravilo za predupređivanje frustracije
+- **AKO korisnik postavlja pitanje koje može biti interpretirano na više načina, asistent MORA da pita za pojašnjenje.**
+- **AKO korisnik koristi nejasne termine ili reference, asistent MORA da traži preciziranje.**
+- **AKO korisnik traži "fix" bez konteksta, asistent MORA da pita "Šta tačno treba da popravim?"**
+- **AKO korisnik postavlja pitanje koje može biti tehnički ili konceptualno, asistent MORA da pita "Da li te zanima tehnička implementacija ili konceptualno objašnjenje?"**
+- **Cilj: Sprečiti frustraciju pre nego što nastane.**
+
 ### **Terminologija ispravke (obavezno)**
 - **OBVEZNO** ispraviti pogrešnu terminologiju (PHP/Java → Go)
 - **OBVEZNO** ispraviti: "referenca" → "pointer", "exception" → "error"
