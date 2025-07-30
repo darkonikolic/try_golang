@@ -44,9 +44,14 @@ internal/
 pkg/
   logger/                # Shared utilities - UVEK
   config/                # Configuration - UVEK
+  # Infrastructure tools (Terraform, Helm) - UVEK u Ops layer
+
+### **DevOps Flow - UVEK**
+```
+Development (Go) → Docker Image → Operations (Kubernetes)
 ```
 
-### **Dependency Flow - UVEK**
+### **Clean Architecture Flow - UVEK**
 ```
 UI → Application → Domain ← Infrastructure
 ```
@@ -58,9 +63,27 @@ UI → Application → Domain ← Infrastructure
 - ❌ Application → Infrastructure
 - ❌ UI → Infrastructure
 
+### **DevOps Separation - UVEK**
+- ✅ **Development**: Go aplikacija (business logic)
+- ✅ **Operations**: Kubernetes (deployment, scaling)
+- ✅ **DevOps**: CI/CD pipeline (automatizacija)
+- ❌ **Go aplikacija NIKAD ne poziva k8s API**
+- ❌ **Kubernetes NIKAD ne sadrži business logic**
+
 ## **💻 TEHNIČKA PRAVILA**
 
 ### **Docker-first pristup - UVEK**
+- Sve komande se izvršavaju kroz Docker kontejnere
+- Nema lokalnog pokretanja Go-a, go mod-a ili drugih alata
+- Makefile komande koriste `docker-compose exec app`
+- Multi-stage Docker build za production
+
+### **DevOps - Separation of Concerns - UVEK**
+- **Development (Go)**: UVEK za business logic, HTTP API, database operations
+- **Operations (Kubernetes)**: UVEK za deployment, scaling, monitoring, infrastructure
+- **DevOps (CI/CD)**: UVEK za automatizaciju, pipeline, infrastructure as code
+- **Go aplikacija NIKAD ne poziva k8s API** - to je pogrešan pristup
+- **Kubernetes NIKAD ne sadrži business logic** - to je pogrešan pristup
 - Sve komande se izvršavaju kroz Docker kontejnere
 - Nema lokalnog pokretanja Go-a, go mod-a ili drugih alata
 - Makefile komande koriste `docker-compose exec app`
@@ -71,6 +94,15 @@ UI → Application → Domain ← Infrastructure
 - `gofmt` za formatiranje, `golint` za linting
 - `go vet` za static analysis
 - Jedan package po direktorijumu, jasna struktura
+
+### **Infrastructure as Code - UVEK**
+- **Terraform**: UVEK za infrastructure provisioning (k8s cluster, databases, networks)
+- **Helm**: UVEK za Kubernetes package management (deployment, services, configmaps)
+- **Kustomize**: UVEK za Kubernetes customization (environment-specific configs)
+- **GitOps**: UVEK za deployment automation (ArgoCD, Flux)
+- **Version Control**: UVEK za sve infrastructure code
+- **Testing**: UVEK za infrastructure testing (Terratest)
+- **Documentation**: UVEK za infrastructure documentation
 
 ### **TDD - Test Driven Development - UVEK**
 - **UVEK** prvo piši test koji pada (RED)
@@ -120,6 +152,8 @@ type CreateUserHandler struct {
 func (h *CreateUserHandler) Handle(req CreateUserRequest) (*CreateUserResponse, error) {
     // UVEK - orchestration logic
 }
+
+
 ```
 
 ### **Infrastructure Layer - UVEK**
@@ -132,6 +166,8 @@ type PostgresUserRepository struct {
 func (r *PostgresUserRepository) Save(user *domain.User) error {
     // UVEK - database logic
 }
+
+
 ```
 
 ## **🚫 ZABRANJENA PRAVILA**
@@ -147,11 +183,14 @@ func (r *PostgresUserRepository) Save(user *domain.User) error {
 - ❌ Direct database access
 - ❌ Framework-specific logic
 - ❌ Business logic (to ide u Domain)
+- ❌ Kubernetes API calls (to ide u Ops, ne u Dev)
+- ❌ Infrastructure provisioning logic (to ide u Ops)
 
 ### **NIKAD u Infrastructure layer:**
 - ❌ Business logic
 - ❌ Domain entities modification
 - ❌ HTTP handlers
+- ❌ Application deployment logic (to ide u Ops)
 
 ### **NIKAD globalno:**
 - ❌ Global variables
@@ -233,6 +272,20 @@ make db-down      # Stop database
 # Build
 make build        # Build aplikacije
 make clean        # Clean sve
+
+# DevOps - Operations
+make k8s-deploy   # Deploy application to Kubernetes
+make k8s-delete   # Delete application from Kubernetes
+make k8s-logs     # View application logs
+make k8s-scale    # Scale application replicas
+make helm-install  # Install Helm chart
+make helm-delete   # Delete Helm chart
+
+# DevOps - Infrastructure
+make terraform-init    # Initialize Terraform
+make terraform-plan    # Plan infrastructure changes
+make terraform-apply   # Apply infrastructure changes
+make terraform-destroy # Destroy infrastructure
 ```
 
 ## **💬 KOMUNIKACIJA**
