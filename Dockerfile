@@ -3,7 +3,7 @@
 # ===========================================
 # DEVELOPMENT STAGE
 # ===========================================
-FROM golang:1.21-alpine AS development
+FROM golang:1.24-alpine AS development
 
 # Install development tools
 RUN apk add --no-cache \
@@ -14,7 +14,7 @@ RUN apk add --no-cache \
     && rm -rf /var/cache/apk/*
 
 # Install Air for hot reload
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/air-verse/air@latest
 
 # Set working directory
 WORKDIR /app
@@ -37,7 +37,7 @@ CMD ["air", "-c", ".air.toml"]
 # ===========================================
 # PRODUCTION BUILD STAGE
 # ===========================================
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 # Install git for private repos
 RUN apk add --no-cache git

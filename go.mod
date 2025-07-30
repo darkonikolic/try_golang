@@ -1,3 +1,3 @@
 module github.com/darkonikolic/try_golang
 
-go 1.21 
+go 1.24 
