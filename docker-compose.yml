@@ -13,6 +13,8 @@ services:
     volumes:
       # Mount source code for hot reload
       - .:/app
+      # Mount dist directory for build outputs
+      - ./dist:/app/dist
       # Exclude vendor and build artifacts
       - /app/vendor
       - /app/.git
