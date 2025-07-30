@@ -45,4 +45,9 @@ Thumbs.db
 
 # Build artifacts
 bin/
-dist/ 
+dist/
+node_modules/
+vendor/
+
+# Air temporary files (needed for hot reload)
+# tmp/ - commented out because Air needs this folder 

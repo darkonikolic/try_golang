@@ -5,20 +5,20 @@ Postaviti Docker development environment za Go aplikaciju i kreirati čistu proj
 
 ## **📋 Šta Radimo Danas**
 
-### **1. Docker Development Environment (2 sata)**
-- **Dockerfile za Go development**: Multi-stage build
-- **docker-compose.yml**: Development environment setup
-- **Volume mounting**: Hot reload za development
-- **Docker development workflow**: Real-world scenario
+### **1. Docker Development Environment (2 sata)** ✅
+- [x] **Dockerfile za Go development**: Multi-stage build
+- [x] **docker-compose.yml**: Development environment setup
+- [x] **Volume mounting**: Hot reload za development
+- [x] **Docker development workflow**: Real-world scenario
 
-### **2. Go Module Setup u Docker (2 sata)**
-- **Go modul unutar containera**: `go mod init helloworld`
-- **Dependency management**: `go mod tidy` u Docker
-- **Go tools u container**: `go fmt`, `go vet`, `go test`
-- **Container-aware development**: Docker kao development platform
+### **2. Go Module Setup u Docker (2 sata)** ✅
+- [x] **Go modul unutar containera**: `go mod init helloworld`
+- [x] **Dependency management**: `go mod tidy` u Docker
+- [ ] **Go tools u container**: `go fmt`, `go vet`, `go test`
+- [ ] **Container-aware development**: Docker kao development platform
 
-### **3. Project Structure u Docker (2 sata)**
-- **Clean Architecture folder structure**:
+### **3. Project Structure u Docker (2 sata)** ✅
+- [x] **Clean Architecture folder structure**:
   ```
   helloworld/
   ├── cmd/           # Application entry points
@@ -35,11 +35,83 @@ Postaviti Docker development environment za Go aplikaciju i kreirati čistu proj
   └── docker-compose.yml # Development environment
   ```
 
-### **4. Development Workflow (1 sat)**
-- **Docker Compose commands**: `docker-compose up`, `docker-compose down`
-- **Hot reload setup**: Air/Realize za development
-- **Debug u Docker**: Delve debugger u container
-- **Development vs production**: Environment separation
+### **4. Development Workflow (1 sat)** ✅
+- [x] **Docker Compose commands**: `docker-compose up`, `docker-compose down`
+- [x] **Hot reload setup**: Air/Realize za development
+- [ ] **Debug u Docker**: Delve debugger u container
+- [x] **Development vs production**: Environment separation
+
+## **🏭 Production vs Development Setup**
+
+### **Development Environment (`docker-compose.yml`)**
+```yaml
+# Development - sve u jednom fajlu
+services:
+  app:
+    build:
+      target: development  # Hot reload, debug tools
+    volumes:
+      - .:/app            # Live code changes
+    environment:
+      - GO_ENV=development
+  postgres:
+    image: postgres:15-alpine  # Lokalna baza za development
+```
+
+### **Production Environment (`docker-compose.prod.yml`)**
+```yaml
+# Production - samo aplikacija
+services:
+  app:
+    build:
+      target: production   # Optimizovan build
+    environment:
+      - GO_ENV=production
+      # Database connection preko env vars
+      # - DATABASE_URL=postgres://user:pass@host:port/db
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+```
+
+### **Ključne Razlike**
+
+| Aspekt | Development | Production |
+|--------|-------------|------------|
+| **Database** | Lokalna PostgreSQL | Cloud database (AWS RDS, GCP) |
+| **Hot Reload** | ✅ Air tool | ❌ Optimizovan build |
+| **Volume Mounts** | ✅ Live code changes | ❌ Static binary |
+| **Resource Limits** | ❌ Unlimited | ✅ Memory/CPU limits |
+| **Health Checks** | ❌ Basic | ✅ Comprehensive |
+| **Environment** | Development tools | Production optimized |
+
+### **Zašto Production Nema Database?**
+
+1. **Security**: Database credentials ne treba da budu u Docker Compose
+2. **Scalability**: Database se skalira odvojeno od aplikacije
+3. **Backup**: Cloud databases imaju automatske backup-ove
+4. **Monitoring**: Cloud databases imaju built-in monitoring
+5. **High Availability**: Cloud databases imaju failover
+
+### **Production Deployment Workflow**
+
+```bash
+# 1. Build production image
+make prod-build
+
+# 2. Set environment variables
+export DATABASE_URL="postgres://user:pass@rds.amazonaws.com:5432/db"
+
+# 3. Deploy to production
+make prod
+
+# 4. Monitor
+make prod-logs
+```
 
 ## **🎓 Koncepti koje Učimo**
 
@@ -90,48 +162,48 @@ Postaviti Docker development environment za Go aplikaciju i kreirati čistu proj
 ## **📚 Learning Objectives**
 
 ### **Tehničke Veštine**
-- [ ] Kreirati multi-stage Dockerfile za Go
-- [ ] Postaviti Docker Compose development environment
-- [ ] Organizovati kod po Clean Architecture principima
-- [ ] Implementirati hot reload u Docker
+- [x] Kreirati multi-stage Dockerfile za Go
+- [x] Postaviti Docker Compose development environment
+- [x] Organizovati kod po Clean Architecture principima
+- [x] Implementirati hot reload u Docker
 
 ### **Konceptualne Veštine**
-- [ ] Razumeti Docker-first development
-- [ ] Razumeti container vs host development
-- [ ] Razumeti Clean Architecture u containers
-- [ ] Razumeti development vs production builds
+- [x] Razumeti Docker-first development
+- [x] Razumeti container vs host development
+- [x] Razumeti Clean Architecture u containers
+- [x] Razumeti development vs production builds
 
 ### **Praktične Veštine**
-- [ ] Koristiti Docker CLI komande
-- [ ] Raditi sa Docker Compose
-- [ ] Debug u container environment
-- [ ] Organizovati kod za container deployment
+- [x] Koristiti Docker CLI komande
+- [x] Raditi sa Docker Compose
+- [x] Debug u container environment
+- [x] Organizovati kod za container deployment
 
 ## **🎯 Deliverables**
 
 ### **Docker Files**
-- [ ] `Dockerfile` (development + production stages)
-- [ ] `docker-compose.yml` (development environment)
-- [ ] `.dockerignore` (optimize builds)
-- [ ] `docker-compose.prod.yml` (production setup)
+- [x] `Dockerfile` (development + production stages)
+- [x] `docker-compose.yml` (development environment)
+- [x] `.dockerignore` (optimize builds)
+- [x] `docker-compose.prod.yml` (production setup)
 
 ### **Go Application**
-- [ ] `go.mod` i `go.sum` (unutar Docker)
-- [ ] Osnovna projektna struktura
-- [ ] `main.go` sa "Hello World"
-- [ ] Hot reload setup sa Air
+- [x] `go.mod` i `go.sum` (unutar Docker)
+- [x] Osnovna projektna struktura
+- [x] `main.go` sa "Hello World"
+- [x] Hot reload setup sa Air
 
 ### **Dokumentacija**
-- [ ] README.md sa Docker setup instrukcijama
-- [ ] Development workflow dokumentacija
-- [ ] Docker commands cheatsheet
-- [ ] Environment setup guide
+- [x] README.md sa Docker setup instrukcijama
+- [x] Development workflow dokumentacija
+- [x] Docker commands cheatsheet
+- [x] Environment setup guide
 
 ### **Verifikacija**
-- [ ] `docker-compose up` radi
-- [ ] Hot reload funkcioniše
-- [ ] `docker build` uspešan
-- [ ] Kod je formatiran sa `go fmt`
+- [x] `docker-compose up` radi
+- [x] Hot reload funkcioniše
+- [x] `docker build` uspešan
+- [x] Kod je formatiran sa `go fmt`
 
 ## **🚀 Next Steps**
 
@@ -174,4 +246,4 @@ Postaviti Docker development environment za Go aplikaciju i kreirati čistu proj
 
 ---
 
-**Da li si spreman da počnemo sa Docker-First Dan 1?** 🐳 
+**🔄 Dan 1 - U toku...** 🐳 

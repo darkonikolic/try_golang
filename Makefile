@@ -139,16 +139,22 @@ vet: ## Vet Go code in Docker Compose
 	@echo "Vetting Go code in Docker Compose..."
 	docker-compose run --rm app go vet ./...
 
+.PHONY: lint-install
+lint-install: ## Install linter in Docker Compose
+	@echo "Installing linter in Docker Compose..."
+	docker-compose run --rm app sh -c "go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
+
 .PHONY: lint
 lint: ## Run linter in Docker Compose
 	@echo "Running linter in Docker Compose..."
-	docker-compose run --rm app sh -c "go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && golangci-lint run"
+	docker-compose run --rm app sh -c "golangci-lint run"
 
 .PHONY: check
 check: ## Run all code quality checks in Docker Compose
 	@echo "Running all code quality checks in Docker Compose..."
 	$(MAKE) fmt
 	$(MAKE) vet
+	$(MAKE) lint
 	$(MAKE) test
 
 # ===========================================
@@ -177,6 +183,33 @@ db-reset: ## Reset database (remove volume)
 	docker-compose up -d postgres
 
 # ===========================================
+# PRODUCTION TARGETS
+# ===========================================
+
+.PHONY: prod
+prod: ## Start production server
+	@echo "Starting production server..."
+	docker-compose -f docker-compose.prod.yml up -d
+
+.PHONY: prod-stop
+prod-stop: ## Stop production server
+	@echo "Stopping production server..."
+	docker-compose -f docker-compose.prod.yml down
+
+.PHONY: prod-logs
+prod-logs: ## Show production logs
+	@echo "Showing production logs..."
+	docker-compose -f docker-compose.prod.yml logs -f
+
+.PHONY: prod-build
+prod-build: ## Build production image
+	@echo "Building production image..."
+	docker-compose -f docker-compose.prod.yml build
+
+.PHONY: prod-restart
+prod-restart: prod-stop prod ## Restart production server
+
+# ===========================================
 # DOCKER COMPOSE CLEANUP TARGETS
 # ===========================================
 
@@ -185,12 +218,21 @@ clean: ## Clean build artifacts and Docker Compose resources
 	@echo "Cleaning build artifacts and Docker Compose resources..."
 	rm -rf $(BUILD_DIR)
 	rm -rf $(DIST_DIR)
+	rm -rf dist/
+	rm -rf node_modules/
+	rm -rf vendor/
 	rm -f coverage.out coverage.html
 	$(MAKE) clean-compose
 
 .PHONY: clean-compose
-clean-compose: ## Clean Docker Compose resources
+clean-compose: ## Clean Docker Compose resources (preserves go_cache)
 	@echo "Cleaning Docker Compose resources..."
+	docker-compose down --remove-orphans
+	docker-compose rm -f
+
+.PHONY: clean-compose-full
+clean-compose-full: ## Clean Docker Compose resources including volumes
+	@echo "Cleaning Docker Compose resources including volumes..."
 	docker-compose down -v --remove-orphans
 	docker-compose rm -f
 
@@ -211,6 +253,11 @@ clean-all: ## Clean everything (containers, images, volumes)
 .PHONY: shell
 shell: ## Open shell in application container
 	@echo "Opening shell in application container..."
+	docker-compose run --rm app /bin/bash
+
+.PHONY: bash
+bash: ## Open bash shell in application container (alias for shell)
+	@echo "Opening bash shell in application container..."
 	docker-compose run --rm app /bin/bash
 
 .PHONY: shell-db
@@ -242,5 +289,6 @@ all: ## Build, test, and run all checks in Docker Compose
 	@echo "Running all targets in Docker Compose..."
 	$(MAKE) clean-compose
 	$(MAKE) deps
+	$(MAKE) lint-install
 	$(MAKE) check
 	$(MAKE) build 

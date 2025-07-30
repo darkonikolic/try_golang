@@ -11,17 +11,16 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      # Mount source code for hot reload
+      # Mount source code for hot reload (excluding unwanted folders)
       - .:/app
-      # Mount dist directory for build outputs
-      - ./dist:/app/dist
-      # Exclude vendor and build artifacts
-      - /app/vendor
-      - /app/.git
-      - /app/node_modules
+      # Mount Go cache for faster builds and tool installations
+      - go_cache:/go
     environment:
       - GO_ENV=development
       - PORT=8080
+      - CGO_ENABLED=0
+      - GOTOOLCHAIN=local
+      - GOFLAGS=-buildvcs=false
     restart: unless-stopped
 
   # PostgreSQL database (optional for now)
@@ -39,4 +38,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data: 
+  postgres_data:
+  go_cache: 

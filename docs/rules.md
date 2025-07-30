@@ -256,3 +256,16 @@ make k8s-logs        # View logs
 - [x] Ako sadrži duplikate sa drugim dokumentima - obriši
 - [x] Ako ima bitne informacije - prebaci u odgovarajući dokument
 - [x] Fokus na lične beleske, ne na duplikate 
+
+### Pravilo za komunikaciju sa mentorom (AI asistentom)
+- **Ako korisnikov zahtev nije potpuno jasan, asistent MORA da traži pojašnjenje pre nego što odgovori.**
+- **NIKADA ne nagađaj ili daj generički odgovor ako nisi siguran šta korisnik traži.**
+- **Direktno pitaj: 'Možeš li precizirati šta tačno želiš?' ili 'Nisam siguran da li sam razumeo, možeš li pojasniti?'**
+- **Cilj: Uvek dati tačan, koncizan i kontekstualno relevantan odgovor.**
+
+### **Terminologija ispravke (obavezno)**
+- **OBVEZNO** ispraviti pogrešnu terminologiju (PHP/Java → Go)
+- **OBVEZNO** ispraviti: "referenca" → "pointer", "exception" → "error"
+- **OBVEZNO** ispraviti: "class" → "struct", "inheritance" → "composition"
+- **GREŠKE U KUCANJU** su OK (typos)
+- **TERMINOLOGIJA** nije OK - mora biti Go-specific 
