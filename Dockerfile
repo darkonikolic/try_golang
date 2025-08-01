@@ -16,6 +16,13 @@ RUN apk add --no-cache \
 # Install Air for hot reload
 RUN go install github.com/air-verse/air@latest
 
+# Install Go tools for IDE support
+RUN go install golang.org/x/tools/gopls@latest && \
+    go install golang.org/x/tools/cmd/goimports@latest && \
+    go install github.com/fatih/gomodifytags@latest && \
+    go install github.com/josharian/impl@latest && \
+    go install github.com/cweill/gotests/gotests@latest
+
 # Set working directory
 WORKDIR /app
 

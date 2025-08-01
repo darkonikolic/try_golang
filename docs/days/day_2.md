@@ -98,7 +98,7 @@ Implementirati User Entity sa Go structs i methods, postaviti Domain layer, i ko
 
 ### **Go Code**
 - [ ] `internal/domain/user/user.go` (User struct)
-- [ ] `internal/domain/user/repository.go` (Repository interface)
+- [ ] `internal/domain/user/user_repository.go` (Repository interface)
 - [ ] `internal/domain/user/service.go` (Domain service)
 - [ ] `internal/domain/user/errors.go` (Domain exceptions)
 
@@ -110,7 +110,7 @@ Implementirati User Entity sa Go structs i methods, postaviti Domain layer, i ko
 
 ### **Tests**
 - [ ] `internal/domain/user/user_test.go`
-- [ ] `internal/domain/user/repository_test.go`
+- [ ] `internal/domain/user/user_repository_test.go`
 - [ ] `internal/domain/user/service_test.go`
 - [ ] Test coverage > 80%
 
